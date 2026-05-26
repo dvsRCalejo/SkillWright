@@ -34,6 +34,55 @@ Recommended checks:
 2. Confirm the environment has required capacity and licensing for Dataverse-backed features.
 3. Confirm users running the agent can access required Dataverse resources.
 
+### Why Dataverse Intelligence Matters For Business Skills
+
+Dataverse Intelligence helps the agent move from simple Q&A into business-aware automation.
+
+It enables richer enterprise scenarios by allowing skills to:
+
+1. Use business context from Dataverse data, not just prompt text.
+2. Route actions based on business entities, relationships, and rules.
+3. Produce more reliable and relevant responses in line with organizational data.
+4. Support repeatable workflows where skills can be reused across departments and use cases.
+
+Without this layer, skills can still run, but they are typically less contextual and less aligned with real business processes.
+
+## What Are Business Skills?
+
+Business skills are reusable, task-focused capabilities an agent can invoke to complete a business outcome.
+
+In practice, a business skill usually combines:
+
+1. A clear intent (what the user wants done).
+2. A connector or API action (how the action is executed).
+3. Optional business data context (who/what/where in business terms).
+4. A safe response pattern (how results and errors are returned to the user).
+
+For SkillWright, examples of business skills include:
+
+1. Finding skill collections in GitHub repositories for a specific capability.
+2. Discovering agent skill definitions and returning install-ready references.
+3. Listing repository files recursively to evaluate skill package structure.
+4. Pulling file content to inspect installation metadata or manifests.
+
+## Example Ways To Use This Agent
+
+After setup is complete, use SkillWright for scenarios like:
+
+1. "Find me skill collections for IT service management in GitHub."
+2. "Search for agent skills related to employee onboarding."
+3. "List all files in this repo so I can verify skill packaging."
+4. "Get the default branch and inspect installation files before import."
+5. "Retrieve this skill definition file content and summarize what it installs."
+
+### Example Workflow: Discover Then Validate A Skill
+
+1. Ask the agent to search GitHub for relevant skills.
+2. Ask it to list repository contents.
+3. Ask it to fetch target files (metadata, docs, manifests).
+4. Review compatibility with your managed environment and governance policies.
+5. Import the custom connector and complete the installation sequence.
+
 ## Required Installation Order
 
 Install in this order to avoid broken references:
