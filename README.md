@@ -136,7 +136,7 @@ Install in this order to avoid broken references:
 
 1. **Install the custom connector first** (`Github-Search.swagger.json`).
 2. Create/authorize connector connections.
-3. Import agent files and solution assets.
+3. Import agent assets using one of the supported methods (folder-based import or unmanaged solution import).
 4. Map all connection references.
 5. Validate actions and topic triggers.
 
@@ -149,9 +149,38 @@ If you import the agent first, action steps may fail because connection referenc
 3. Install `skills-for-copilot-studio` tooling if not already installed.
 4. Import the custom connector from `Custom Connector/Github-Search.swagger.json`.
 5. Complete connector authentication and test a connector operation.
-6. Import the agent package from the `Skills Agent` folder.
+6. Import the agent using one of the installation methods below.
 7. Bind connection references in `connectionreferences.mcs.yml` to the created connector connection.
 8. Validate key topics, especially `Search.mcs.yml`, and run a test conversation.
+
+## Installation Methods
+
+SkillWright can be installed in two ways:
+
+1. Folder-based import using the agent files in this repository.
+2. Unmanaged solution package import.
+
+### Method 1: Folder-Based Import
+
+1. Import from the `Skills Agent` folder.
+2. Ensure all action files and topic files are included.
+3. Rebind connection references after import.
+
+### Method 2: Unmanaged Solution Package Import
+
+Use this when you want a packaged import path.
+
+1. Open Power Apps and go to Solutions.
+2. Select Import solution.
+3. Upload the SkillWright unmanaged solution package.
+4. Complete import and resolve any prompts for connection references.
+5. Verify the custom connector connection is mapped correctly.
+
+Important:
+
+1. The custom connector must still be installed first.
+2. Unmanaged solution import does not remove the dependency on connector authentication.
+3. Run the Post-Install Validation checklist after import.
 
 ## GitHub Personal Access Token For The Custom Connector
 
