@@ -1,0 +1,31 @@
+mcs.metadata:
+  componentName: Github Search - Get repository info (default branch)
+kind: TaskDialog
+modelDisplayName: Get repository info (default branch)
+modelDescription: Returns repository metadata. Read "default_branch" to use as tree_sha in GetTree (code search only indexes the default branch anyway).
+outputs:
+  - propertyName: default_branch
+
+  - propertyName: description
+
+  - propertyName: full_name
+
+  - propertyName: html_url
+
+  - propertyName: id
+
+  - propertyName: name
+
+  - propertyName: private
+
+  - propertyName: stargazers_count
+
+action:
+  kind: InvokeConnectorTaskAction
+  connectionReference: rc_SkillsAgent.shared_github-20search-5f4a4a42f3dd5a02f0-5f898352cd73ccc982.57c264ae15ec4e79b7602118e298914c
+  connectionProperties:
+    mode: Invoker
+
+  operationId: GetRepo
+
+outputMode: All

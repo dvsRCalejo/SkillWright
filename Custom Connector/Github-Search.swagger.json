@@ -1,0 +1,568 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "GitHub Skill Search & Fetch",
+    "description": "Custom connector for the GitHub REST API, tuned for discovering Agent Skills (SKILL.md) on public GitHub and downloading their files so an agent can hand the content to the Dataverse MCP server to create business skills. Authenticate with a GitHub Personal Access Token (see notes on the Authorization header value below).",
+    "version": "1.2.0"
+  },
+  "host": "api.github.com",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/search/code": {
+      "get": {
+        "summary": "Search GitHub for Agent Skills",
+        "description": "Find skills published on public GitHub. Query with \"filename:SKILL.md\" plus a topic term (a content term is REQUIRED), e.g. \"filename:SKILL.md invoice\". Each result ending in /SKILL.md is one skill: use \"path\" for the skill folder/name, \"sha\" to fetch its content with GetBlob, and \"repository.full_name\" for the source. The skill's name and description live INSIDE the SKILL.md, so fetch the blob to read them. Limits: legacy code-search index (default branch only, partial coverage), max 1000 results (100/page), ~30 requests/min.",
+        "operationId": "SearchCode",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Search query. Example: filename:SKILL.md invoice",
+            "x-ms-summary": "Query"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "indexed"
+            ],
+            "description": "Only 'indexed' is supported for code search. Omit for best match.",
+            "x-ms-summary": "Sort by"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "desc",
+              "asc"
+            ],
+            "x-ms-summary": "Order"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 30,
+            "description": "Results per page (max 100).",
+            "x-ms-summary": "Results per page"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "x-ms-summary": "Page number"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "application/vnd.github+json"
+          },
+          {
+            "name": "X-GitHub-Api-Version",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "2022-11-28"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CodeSearchResult"
+            }
+          }
+        }
+      }
+    },
+    "/search/repositories": {
+      "get": {
+        "summary": "Search GitHub for skill collections",
+        "description": "Find repositories that bundle many skills, e.g. \"topic:agent-skills\" or \"agent skills in:name,description\". Use when the user wants to browse a whole catalog rather than one skill. Combine with GetTree to list the SKILL.md files inside a chosen repo.",
+        "operationId": "SearchRepositories",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Query"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "stars",
+              "forks",
+              "help-wanted-issues",
+              "updated"
+            ],
+            "x-ms-summary": "Sort by"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "desc",
+              "asc"
+            ],
+            "x-ms-summary": "Order"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 30,
+            "x-ms-summary": "Results per page"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "x-ms-summary": "Page number"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "application/vnd.github+json"
+          },
+          {
+            "name": "X-GitHub-Api-Version",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "2022-11-28"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RepositorySearchResult"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}": {
+      "get": {
+        "summary": "Get repository info (default branch)",
+        "description": "Returns repository metadata. Read \"default_branch\" to use as tree_sha in GetTree (code search only indexes the default branch anyway).",
+        "operationId": "GetRepo",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Owner"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Repository"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "application/vnd.github+json"
+          },
+          {
+            "name": "X-GitHub-Api-Version",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "2022-11-28"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Repository"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/git/trees/{tree_sha}": {
+      "get": {
+        "summary": "List every file in a repo (recursive)",
+        "description": "Returns the full file tree in one call when recursive=1. tree_sha is a branch name (e.g. main) or a tree/commit SHA. To enumerate one skill's files, keep items where type='blob' and path starts with the skill's folder; each item's \"sha\" feeds GetBlob. If \"truncated\"=true the repo was too large and the tree is incomplete.",
+        "operationId": "GetTree",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Owner"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Repository"
+          },
+          {
+            "name": "tree_sha",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Branch name (e.g. main) or tree/commit SHA.",
+            "x-ms-summary": "Branch or tree SHA"
+          },
+          {
+            "name": "recursive",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Set to 1 to return the full nested tree.",
+            "x-ms-summary": "Recursive"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "application/vnd.github+json"
+          },
+          {
+            "name": "X-GitHub-Api-Version",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "2022-11-28"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GitTree"
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/git/blobs/{file_sha}": {
+      "get": {
+        "summary": "Get a file's content (Base64)",
+        "description": "Returns one file's content Base64-encoded, looked up by blob \"sha\" (from a code-search item or a tree item). Decode text files (SKILL.md, .md) with base64ToString(); keep binary files as Base64. Used to read a skill's SKILL.md and to download every file in a skill folder for handoff to the Dataverse MCP server. Uses a SHA (no slashes), avoiding the slash-in-path problem of the contents endpoint.",
+        "operationId": "GetBlob",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Owner"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Repository"
+          },
+          {
+            "name": "file_sha",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "File SHA"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "application/vnd.github+json"
+          },
+          {
+            "name": "X-GitHub-Api-Version",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "2022-11-28"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Blob"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CodeSearchResult": {
+      "type": "object",
+      "properties": {
+        "total_count": {
+          "type": "integer",
+          "x-ms-summary": "Total count"
+        },
+        "incomplete_results": {
+          "type": "boolean",
+          "x-ms-summary": "Incomplete results"
+        },
+        "items": {
+          "type": "array",
+          "x-ms-summary": "Items",
+          "items": {
+            "$ref": "#/definitions/CodeItem"
+          }
+        }
+      }
+    },
+    "CodeItem": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "x-ms-summary": "File name"
+        },
+        "path": {
+          "type": "string",
+          "x-ms-summary": "File path"
+        },
+        "sha": {
+          "type": "string",
+          "x-ms-summary": "SHA"
+        },
+        "html_url": {
+          "type": "string",
+          "x-ms-summary": "HTML URL"
+        },
+        "url": {
+          "type": "string",
+          "x-ms-summary": "API URL"
+        },
+        "git_url": {
+          "type": "string",
+          "x-ms-summary": "Git URL"
+        },
+        "score": {
+          "type": "number",
+          "x-ms-summary": "Score"
+        },
+        "repository": {
+          "$ref": "#/definitions/RepositoryMini"
+        }
+      }
+    },
+    "RepositoryMini": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "x-ms-summary": "Repository ID"
+        },
+        "name": {
+          "type": "string",
+          "x-ms-summary": "Repository name"
+        },
+        "full_name": {
+          "type": "string",
+          "x-ms-summary": "Repository full name"
+        },
+        "html_url": {
+          "type": "string",
+          "x-ms-summary": "Repository URL"
+        },
+        "default_branch": {
+          "type": "string",
+          "x-ms-summary": "Default branch"
+        },
+        "private": {
+          "type": "boolean",
+          "x-ms-summary": "Is private"
+        }
+      }
+    },
+    "GitTree": {
+      "type": "object",
+      "properties": {
+        "sha": {
+          "type": "string",
+          "x-ms-summary": "Tree SHA"
+        },
+        "url": {
+          "type": "string",
+          "x-ms-summary": "URL"
+        },
+        "truncated": {
+          "type": "boolean",
+          "x-ms-summary": "Truncated"
+        },
+        "tree": {
+          "type": "array",
+          "x-ms-summary": "Tree",
+          "items": {
+            "$ref": "#/definitions/TreeItem"
+          }
+        }
+      }
+    },
+    "TreeItem": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "x-ms-summary": "Path"
+        },
+        "mode": {
+          "type": "string",
+          "x-ms-summary": "Mode"
+        },
+        "type": {
+          "type": "string",
+          "x-ms-summary": "Type (blob or tree)"
+        },
+        "sha": {
+          "type": "string",
+          "x-ms-summary": "SHA"
+        },
+        "size": {
+          "type": "integer",
+          "x-ms-summary": "Size"
+        },
+        "url": {
+          "type": "string",
+          "x-ms-summary": "URL"
+        }
+      }
+    },
+    "Blob": {
+      "type": "object",
+      "properties": {
+        "sha": {
+          "type": "string",
+          "x-ms-summary": "SHA"
+        },
+        "size": {
+          "type": "integer",
+          "x-ms-summary": "Size"
+        },
+        "encoding": {
+          "type": "string",
+          "x-ms-summary": "Encoding"
+        },
+        "content": {
+          "type": "string",
+          "x-ms-summary": "Content (Base64)"
+        }
+      }
+    },
+    "RepositorySearchResult": {
+      "type": "object",
+      "properties": {
+        "total_count": {
+          "type": "integer",
+          "x-ms-summary": "Total count"
+        },
+        "incomplete_results": {
+          "type": "boolean",
+          "x-ms-summary": "Incomplete results"
+        },
+        "items": {
+          "type": "array",
+          "x-ms-summary": "Items",
+          "items": {
+            "$ref": "#/definitions/Repository"
+          }
+        }
+      }
+    },
+    "Repository": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "x-ms-summary": "Repository ID"
+        },
+        "name": {
+          "type": "string",
+          "x-ms-summary": "Name"
+        },
+        "full_name": {
+          "type": "string",
+          "x-ms-summary": "Full name"
+        },
+        "html_url": {
+          "type": "string",
+          "x-ms-summary": "URL"
+        },
+        "description": {
+          "type": "string",
+          "x-ms-summary": "Description"
+        },
+        "private": {
+          "type": "boolean",
+          "x-ms-summary": "Is private"
+        },
+        "default_branch": {
+          "type": "string",
+          "x-ms-summary": "Default branch"
+        },
+        "stargazers_count": {
+          "type": "integer",
+          "x-ms-summary": "Stars"
+        }
+      }
+    }
+  },
+  "parameters": {},
+  "responses": {},
+  "security": [
+    {
+      "api_key": []
+    }
+  ],
+  "tags": [],
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
+    }
+  }
+}

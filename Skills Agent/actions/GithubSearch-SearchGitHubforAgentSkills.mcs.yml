@@ -1,0 +1,21 @@
+mcs.metadata:
+  componentName: Github Search - Search GitHub for Agent Skills
+kind: TaskDialog
+modelDisplayName: Search GitHub for Agent Skills
+modelDescription: "Find skills published on public GitHub. Query with \"filename:SKILL.md\" plus a topic term (a content term is REQUIRED), e.g. \"filename:SKILL.md invoice\". Each result ending in /SKILL.md is one skill: use \"path\" for the skill folder/name, \"sha\" to fetch its content with GetBlob, and \"repository.full_name\" for the source. The skill's name and description live INSIDE the SKILL.md, so fetch the blob to read them. Limits: legacy code-search index (default branch only, partial coverage), max 1000 results (100/page), ~30 requests/min."
+outputs:
+  - propertyName: incomplete_results
+
+  - propertyName: items
+
+  - propertyName: total_count
+
+action:
+  kind: InvokeConnectorTaskAction
+  connectionReference: rc_SkillsAgent.shared_github-20search-5f4a4a42f3dd5a02f0-5f898352cd73ccc982.57c264ae15ec4e79b7602118e298914c
+  connectionProperties:
+    mode: Invoker
+
+  operationId: SearchCode
+
+outputMode: All

@@ -1,0 +1,7 @@
+﻿connectionReferences:
+  - connectionReferenceLogicalName: rc_SkillsAgent.shared_commondataserviceforapps.shared-commondataser-7a691bd3-afdc-49f9-ac5b-5e514e61b3c8
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps
+  - connectionReferenceLogicalName: rc_SkillsAgent.shared_commondataserviceforapps.shared-commondataser-f58cdd33-0843-448a-93ac-cf745743d463
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps
+  - connectionReferenceLogicalName: rc_SkillsAgent.shared_github-20search-5f4a4a42f3dd5a02f0-5f898352cd73ccc982.57c264ae15ec4e79b7602118e298914c
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_github-20search-5f4a4a42f3dd5a02f0-5f898352cd73ccc982

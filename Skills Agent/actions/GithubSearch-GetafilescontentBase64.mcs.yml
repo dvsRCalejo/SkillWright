@@ -1,0 +1,23 @@
+mcs.metadata:
+  componentName: Github Search - Get a file's content (Base64)
+kind: TaskDialog
+modelDisplayName: Get a file's content (Base64)
+modelDescription: Returns one file's content Base64-encoded, looked up by blob "sha" (from a code-search item or a tree item). Decode text files (SKILL.md, .md) with base64ToString(); keep binary files as Base64. Used to read a skill's SKILL.md and to download every file in a skill folder for handoff to the Dataverse MCP server. Uses a SHA (no slashes), avoiding the slash-in-path problem of the contents endpoint.
+outputs:
+  - propertyName: content
+
+  - propertyName: encoding
+
+  - propertyName: sha
+
+  - propertyName: size
+
+action:
+  kind: InvokeConnectorTaskAction
+  connectionReference: rc_SkillsAgent.shared_github-20search-5f4a4a42f3dd5a02f0-5f898352cd73ccc982.57c264ae15ec4e79b7602118e298914c
+  connectionProperties:
+    mode: Invoker
+
+  operationId: GetBlob
+
+outputMode: All

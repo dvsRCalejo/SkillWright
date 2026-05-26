@@ -1,0 +1,23 @@
+mcs.metadata:
+  componentName: Github Search - List every file in a repo (recursive)
+kind: TaskDialog
+modelDisplayName: List every file in a repo (recursive)
+modelDescription: Returns the full file tree in one call when recursive=1. tree_sha is a branch name (e.g. main) or a tree/commit SHA. To enumerate one skill's files, keep items where type='blob' and path starts with the skill's folder; each item's "sha" feeds GetBlob. If "truncated"=true the repo was too large and the tree is incomplete.
+outputs:
+  - propertyName: sha
+
+  - propertyName: tree
+
+  - propertyName: truncated
+
+  - propertyName: url
+
+action:
+  kind: InvokeConnectorTaskAction
+  connectionReference: rc_SkillsAgent.shared_github-20search-5f4a4a42f3dd5a02f0-5f898352cd73ccc982.57c264ae15ec4e79b7602118e298914c
+  connectionProperties:
+    mode: Invoker
+
+  operationId: GetTree
+
+outputMode: All

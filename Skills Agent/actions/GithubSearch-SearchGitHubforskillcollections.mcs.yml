@@ -1,0 +1,21 @@
+mcs.metadata:
+  componentName: Github Search - Search GitHub for skill collections
+kind: TaskDialog
+modelDisplayName: Search GitHub for skill collections
+modelDescription: Find repositories that bundle many skills, e.g. "topic:agent-skills" or "agent skills in:name,description". Use when the user wants to browse a whole catalog rather than one skill. Combine with GetTree to list the SKILL.md files inside a chosen repo.
+outputs:
+  - propertyName: incomplete_results
+
+  - propertyName: items
+
+  - propertyName: total_count
+
+action:
+  kind: InvokeConnectorTaskAction
+  connectionReference: rc_SkillsAgent.shared_github-20search-5f4a4a42f3dd5a02f0-5f898352cd73ccc982.57c264ae15ec4e79b7602118e298914c
+  connectionProperties:
+    mode: Invoker
+
+  operationId: SearchRepositories
+
+outputMode: All
