@@ -153,6 +153,45 @@ If you import the agent first, action steps may fail because connection referenc
 7. Bind connection references in `connectionreferences.mcs.yml` to the created connector connection.
 8. Validate key topics, especially `Search.mcs.yml`, and run a test conversation.
 
+## GitHub Personal Access Token For The Custom Connector
+
+Use a GitHub Personal Access Token (PAT) when configuring connector authentication.
+
+### Create A PAT In GitHub
+
+1. Sign in to GitHub and open Settings.
+2. Go to Developer settings.
+3. Open Personal access tokens.
+4. Create either:
+	- Fine-grained token (recommended)
+	- Classic token (if your organization requires it)
+5. Set an expiration date.
+6. Grant minimum required permissions:
+	- Fine-grained: Repository metadata (Read-only), Contents (Read-only) for target repos.
+	- Classic: `public_repo` for public repository access scenarios.
+7. Generate the token and copy it immediately.
+
+### Use The Token In The Connector
+
+Provide the token to the custom connector in this exact authorization value format:
+
+```text
+Bearer <token>
+```
+
+Example:
+
+```text
+Bearer github_pat_XXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+### Security Notes
+
+1. Never commit tokens to source control.
+2. Store tokens only in secure connection settings or approved secret stores.
+3. Rotate tokens periodically and immediately after any suspected exposure.
+4. Prefer short expiration windows and least-privilege scopes.
+
 ## Post-Install Validation
 
 Run this quick validation checklist after import:
