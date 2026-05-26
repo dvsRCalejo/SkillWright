@@ -65,6 +65,53 @@ For SkillWright, examples of business skills include:
 3. Listing repository files recursively to evaluate skill package structure.
 4. Pulling file content to inspect installation metadata or manifests.
 
+## Using Business Skills In Copilot Studio With Dataverse MCP Server Preview
+
+Dataverse MCP Server Preview enables a Copilot Studio agent to invoke MCP-powered operations over Dataverse in a structured and governable way.
+
+### Why This Matters
+
+When combined with business skills, Dataverse MCP Server Preview helps your agent:
+
+1. Understand business context from Dataverse tables and relationships.
+2. Execute skill actions with consistent data contracts.
+3. Apply enterprise controls through managed environments and connection governance.
+4. Orchestrate multi-step business outcomes instead of isolated API calls.
+
+### SkillWright Pattern
+
+A common pattern in SkillWright is:
+
+1. User asks for a business outcome (for example, discover and prepare a skill package).
+2. Agent interprets intent and decides which business skill to execute.
+3. Dataverse MCP Server Preview action is used to retrieve or validate supporting business context.
+4. GitHub connector actions fetch repository details and files.
+5. Agent returns a response with recommended next steps and dependency checks.
+
+### Setup Guidance
+
+1. Confirm Dataverse MCP Server Preview is available in your environment.
+2. Ensure the Dataverse MCP action is present in agent actions (for this repo, see the Dataverse MCP action definition in the Skills Agent actions folder).
+3. Verify connection references are mapped and valid.
+4. Validate permissions for Dataverse access and connector invocation.
+5. Test a basic end-to-end flow before enabling broader user access.
+
+### Example Scenarios
+
+1. "Given this team capability, find matching skill packages and validate readiness against our business context."
+2. "Use business metadata to prioritize which skill collection should be installed first."
+3. "Check required dependencies and show which skills are safe to install in this environment."
+4. "Search GitHub for skills, then use Dataverse context to recommend the best match for onboarding workflows."
+
+### Recommended Prompt Pattern
+
+Use prompts that include:
+
+1. Business goal: what outcome is needed.
+2. Scope: which team/process/environment is targeted.
+3. Constraint: governance, compliance, or dependency boundaries.
+4. Output format: summary, ranked options, or install checklist.
+
 ## Example Ways To Use This Agent
 
 After setup is complete, use SkillWright for scenarios like:
