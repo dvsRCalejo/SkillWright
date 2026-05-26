@@ -2,6 +2,8 @@
 
 SkillWright is a Copilot Studio agent package focused on installing and managing skills using `skills-for-copilot-studio` patterns.
 
+![SkillWright Agent](assets/agent-icon.png)
+
 ## What This Repo Requires
 
 Before importing or running the agent, make sure all requirements below are satisfied.
@@ -157,14 +159,30 @@ If you import the agent first, action steps may fail because connection referenc
 
 SkillWright can be installed in two ways:
 
-1. Folder-based import using the agent files in this repository.
+1. `skills-for-copilot-studio` method using the agent files in this repository.
 2. Unmanaged solution package import.
 
-### Method 1: Folder-Based Import
+### Method 1: `skills-for-copilot-studio` (Recommended)
 
-1. Import from the `Skills Agent` folder.
-2. Ensure all action files and topic files are included.
-3. Rebind connection references after import.
+Use this method when you want a source-controlled authoring workflow in VS Code.
+
+1. Open this repo in VS Code with `skills-for-copilot-studio` installed.
+2. Confirm the local agent structure is present under `Skills Agent`:
+	- `agent.mcs.yml`
+	- `settings.mcs.yml`
+	- `connectionreferences.mcs.yml`
+	- `actions/*.mcs.yml`
+	- `topics/*.mcs.yml`
+3. Use the extension validation flow to validate the local YAML files before deployment.
+4. Use the extension manage/sync flow to push the local agent to your target Copilot Studio environment.
+5. During publish/sync, map `connectionreferences.mcs.yml` to your created GitHub connector connection.
+6. Open the deployed agent in Copilot Studio and run a test conversation for `Search`.
+
+Expected result:
+
+1. Actions are visible and callable.
+2. Topics are active.
+3. GitHub-backed skill discovery works end-to-end.
 
 ### Method 2: Unmanaged Solution Package Import
 
