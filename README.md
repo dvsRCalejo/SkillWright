@@ -4,6 +4,10 @@ SkillWright is a Copilot Studio agent package focused on installing and managing
 
 ![SkillWright Agent](assets/agent-icon.png)
 
+## Demo
+
+![SkillWright Demo](DEMO.gif)
+
 ## What This Repo Requires
 
 Before importing or running the agent, make sure all requirements below are satisfied.
